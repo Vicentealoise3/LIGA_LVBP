@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tabla de Posiciones</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; max-width: 900px; margin: auto; }
+    h1 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
+    }
+    th { background-color: #007bff; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover { background: #c82333; }
+  </style>
+</head>
+<body>
+  <h1>Tabla de Posiciones</h1>
+  <table id="tabla">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Equipo</th>
+        <th>Participante</th>
+        <th>Juegos Programados</th>
+        <th>Juegos Jugados</th>
+        <th>Ganados</th>
+        <th>Perdidos</th>
+        <th>Por Jugar</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+  <button onclick="salir()">Salir</button>
+
+  <script>
+    const usuario = localStorage.getItem("usuario");
+    if (!usuario) {
+      alert("Debes iniciar sesión primero.");
+      window.location.href = "index.html";
+    }
+
+    const participantes = {'Tigers': 'existent_bat2', 'Red Sox': 'freddy_vnzl', 'Reds': 'juanchojs28', 'Rays': 'gaemfx', 'Pirates': 'vicentealoise', 'Blue Jays': 'Juanbrachog', 'Nationals': 'richard262308', 'Athletics': 'me_dicencarlitos', 'Guardians': 'kmaraa-', 'Giants': 'LAPAJA 209249', 'Cardinals': 'Elrorro2', 'Royals': 'machado_seba-03', 'Angels': 'auz_omar_11', 'Brewers': 'WILZULIA'};
+
+    const historial = JSON.parse(localStorage.getItem("historial") || "[]");
+    const equipos = {};
+    const JUEGOS_PROGRAMADOS = 26;
+
+    historial.forEach(r => {
+      const ganador = r.ganador;
+      const perdedor = r.perdedor;
+      if (!equipos[ganador]) equipos[ganador] = { ganados: 0, perdidos: 0 };
+      if (!equipos[perdedor]) equipos[perdedor] = { ganados: 0, perdidos: 0 };
+      equipos[ganador].ganados += 1;
+      equipos[perdedor].perdidos += 1;
+    });
+
+    const filas = Object.keys(equipos).map(nombre => {
+      const stats = equipos[nombre];
+      const jugados = stats.ganados + stats.perdidos;
+      return {
+        equipo: nombre,
+        participante: participantes[nombre] || "N/D",
+        ganados: stats.ganados,
+        perdidos: stats.perdidos,
+        jugados: jugados,
+        porJugar: JUEGOS_PROGRAMADOS - jugados
+      };
+    });
+
+    filas.sort((a, b) => {
+      if (b.ganados !== a.ganados) return b.ganados - a.ganados;
+      if (b.jugados !== a.jugados) return b.jugados - a.jugados;
+      return a.perdidos - b.perdidos;
+    });
+
+    const cuerpo = document.querySelector("tbody");
+    filas.forEach((f, i) => {
+      const fila = document.createElement("tr");
+      fila.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${f.equipo}</td>
+        <td>${f.participante}</td>
+        <td>${JUEGOS_PROGRAMADOS}</td>
+        <td>${f.jugados}</td>
+        <td>${f.ganados}</td>
+        <td>${f.perdidos}</td>
+        <td>${f.porJugar}</td>
+      `;
+      cuerpo.appendChild(fila);
+    });
+
+    const contenedorUsuario = document.createElement("div");
+    contenedorUsuario.textContent = "🔒 Usuario: " + usuario;
+    contenedorUsuario.style.position = "fixed";
+    contenedorUsuario.style.top = "10px";
+    contenedorUsuario.style.right = "10px";
+    contenedorUsuario.style.backgroundColor = "#007bff";
+    contenedorUsuario.style.color = "white";
+    contenedorUsuario.style.padding = "8px 14px";
+    contenedorUsuario.style.borderRadius = "6px";
+    contenedorUsuario.style.fontWeight = "bold";
+    document.body.appendChild(contenedorUsuario);
+
+    function salir() {
+      localStorage.removeItem("usuario");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>

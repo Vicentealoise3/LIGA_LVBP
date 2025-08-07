@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Reportar Juego</title>
+  <style>
+    body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; background-color: #f4f4f4; }
+    h1, h2 { text-align: center; }
+    label, select, input { display: block; width: 100%; margin: 10px 0; padding: 8px; font-size: 16px; }
+    button {
+      padding: 12px;
+      font-size: 16px;
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #218838; }
+    .seccion { margin-top: 30px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
+  </style>
+</head>
+<body>
+  <h1>Formulario de Reporte</h1>
+  <div class="seccion">
+    <h2>Equipo Ganador</h2>
+    <input type="text" id="equipoGanador" readonly />
+  </div>
+
+  <div class="seccion">
+    <h2>Equipo Derrotado</h2>
+    <select id="equipoDerrotado">
+      <option value="">Seleccione el equipo derrotado</option>
+      <option>Tigers</option>
+      <option>Red Sox</option>
+      <option>Reds</option>
+      <option>Rays</option>
+      <option>Pirates</option>
+      <option>Blue Jays</option>
+      <option>Nationals</option>
+      <option>Athletics</option>
+      <option>Guardians</option>
+      <option>Giants</option>
+      <option>Cardinals</option>
+      <option>Royals</option>
+      <option>Angels</option>
+      <option>Brewers</option>
+    </select>
+  </div>
+
+  <div class="seccion">
+    <h2>Resultado del Juego</h2>
+    <input type="text" id="resultado" placeholder="Ejemplo: 5-3" />
+  </div>
+
+  <button onclick="guardarReporte()">Guardar Reporte</button>
+
+  <script>
+    const usuario = localStorage.getItem("usuario");
+    const usuarioEquipoMap = {
+      "existent_bat2": "Tigers",
+      "freddy_vnzl": "Red Sox",
+      "juanchojs28": "Reds",
+      "gaemfx": "Rays",
+      "vicentealoise": "Pirates",
+      "Juanbrachog": "Blue Jays",
+      "richard262308": "Nationals",
+      "me_dicencarlitos": "Athletics",
+      "kmaraa-": "Guardians",
+      "LAPAJA 209249": "Giants",
+      "Elrorro2": "Cardinals",
+      "machado_seba-03": "Royals",
+      "auz_omar_11": "Angels",
+      "WILZULIA": "Brewers"
+    };
+
+    function validarFormatoResultado(texto) {
+      return /^\d{1,2}-\d{1,2}$/.test(texto);
+    }
+
+    function guardarReporte() {
+      const ganador = document.getElementById("equipoGanador").value;
+      const perdedor = document.getElementById("equipoDerrotado").value;
+      const resultado = document.getElementById("resultado").value;
+
+      if (ganador === perdedor) {
+        alert("No puedes seleccionar como derrotado al mismo equipo que ganó.");
+        return;
+      }
+
+      if (!validarFormatoResultado(resultado)) {
+        alert("Formato de resultado inválido. Usa el formato correcto como 5-3.");
+        return;
+      }
+
+      let historial = localStorage.getItem("historial") || "[]";
+      historial = JSON.parse(historial);
+
+      const yaJugados = historial.filter(r =>
+        (r.ganador === ganador && r.perdedor === perdedor) ||
+        (r.ganador === perdedor && r.perdedor === ganador)
+      );
+
+      if (yaJugados.length >= 2) {
+        alert("Estos dos equipos ya jugaron sus dos juegos.");
+        return;
+      }
+
+      historial.push({ ganador, perdedor, resultado });
+      localStorage.setItem("historial", JSON.stringify(historial));
+
+      window.location.href = "historial.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      if (!usuario) {
+        alert("Debes iniciar sesión primero.");
+        window.location.href = "index.html";
+      }
+      const equipo = usuarioEquipoMap[usuario];
+      if (equipo) {
+        document.getElementById("equipoGanador").value = equipo;
+      }
+      const contenedorUsuario = document.createElement("div");
+      contenedorUsuario.textContent = "🔒 Usuario: " + usuario;
+      contenedorUsuario.style.position = "fixed";
+      contenedorUsuario.style.top = "10px";
+      contenedorUsuario.style.right = "10px";
+      contenedorUsuario.style.backgroundColor = "#007bff";
+      contenedorUsuario.style.color = "white";
+      contenedorUsuario.style.padding = "8px 14px";
+      contenedorUsuario.style.borderRadius = "6px";
+      contenedorUsuario.style.fontWeight = "bold";
+      document.body.appendChild(contenedorUsuario);
+    });
+  </script>
+</body>
+</html>

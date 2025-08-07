@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Menú Principal</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; background-color: #eef2f3; padding: 60px; }
+    h1 { color: #333; margin-bottom: 40px; }
+    button {
+      display: block;
+      width: 250px;
+      margin: 10px auto;
+      padding: 14px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+  <h1>Menú Principal - Liga MLB</h1>
+  <button onclick="window.location.href='reporte.html'">📋 Reportar Juego</button>
+  <button onclick="window.location.href='historial.html'">📜 Historial de Juegos</button>
+  <button onclick="window.location.href='tabla.html'">📊 Tabla de Posiciones</button>
+  <button onclick="cerrarSesion()">🚪 Salir</button>
+
+  <script>
+    function cerrarSesion() {
+      localStorage.removeItem("usuario");
+      alert("Has cerrado sesión.");
+      window.location.href = "index.html";
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const usuario = localStorage.getItem("usuario");
+      if (!usuario) {
+        alert("Debes iniciar sesión primero.");
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>
