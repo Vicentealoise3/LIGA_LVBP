@@ -1,100 +1,73 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta charset="utf-8"/>
-<title>Tabla de Posiciones</title>
-<style>
-    body {
-        background: #ffffff;
-        font-family: 'Segoe UI', sans-serif;
-        padding: 30px;
-        color: #000;
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Tabla de Posiciones</title>
+  <style>
+    html, body { max-width: 100%; margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; font-size: 16px; }
+    input, select, button, label { width: 100%; max-width: 100%; box-sizing: border-box; font-size: 1rem; }
+    .responsive-table { width: 100%; overflow-x: auto; display: block; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; text-align: left; font-size: 1rem; }
+    @media (max-width: 600px) {
+        body { font-size: 18px; padding: 10px; }
     }
-    .container {
-        max-width: 900px;
-        margin: auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; max-width: 900px; margin: auto; }
+    h1 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td {
+      padding: 10px;
+      border: 1px solid #ccc;
+      text-align: center;
     }
-    h1 {
-        text-align: center;
-        font-size: 2rem;
-        margin-bottom: 8px;
-        color: #000;
+    th { background-color: #007bff; color: white; }
+    tr:nth-child(even) { background-color: #f9f9f9; }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
     }
-    h2 {
-        text-align: center;
-        font-size: 1.3rem;
-        color: red;
-        margin-top: 0;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 1rem;
-        margin-top: 20px;
-    }
-    th {
-        background-color: #eeeeee;
-        padding: 10px;
-        border: 1px solid #999;
-        text-align: center;
-    }
-    td {
-        padding: 10px;
-        border: 1px solid #999;
-        text-align: center;
-        font-weight: bold;
-    }
-    .clasificado {
-        background-color: yellow;
-    }
-    .fuera {
-        background-color: #dddddd;
-    }
-    .participante {
-        color: red;
-        font-style: italic;
-    }
-    .salir {
-        margin-top: 30px;
-        background-color: #007BFF;
-        color: white;
-        border: none;
-        padding: 12px;
-        width: 100%;
-        border-radius: 8px;
-        font-size: 1.1rem;
-        font-weight: bold;
-        cursor: pointer;
-    }
-    .salir:hover {
-        background-color: #0056b3;
-    }
-</style></head>
-<body class="container">
-<h1>SERIE DEL CARIBE</h1><h2>Ronda Regular</h2>
-<table id="tabla">
-<thead>
-<tr>
-<th>#</th>
-<th>Equipo</th>
-<th>Participante</th>
-<th>Juegos Programados</th>
-<th>Juegos Jugados</th>
-<th>Ganados</th>
-<th>Perdidos</th>
-<th>Por Jugar</th>
-</tr>
-</thead>
-<tbody></tbody>
-</table>
-<button onclick="salir()">Salir</button>
-<script>
+    button:hover { background: #c82333; }
+  </style>
+</head>
+<body>
+  <h1>Tabla de Posiciones</h1>
+  <table id="tabla">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Equipo</th>
+        <th>Participante</th>
+        <th>Juegos Programados</th>
+        <th>Juegos Jugados</th>
+        <th>Ganados</th>
+        <th>Perdidos</th>
+        <th>Por Jugar</th>
+      </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <td></td>
+                <td>Marlins</td>
+                <td>Thiago_70_</td>
+                <td>26</td>
+                <td>0</td>
+                <td>0</td>
+                <td>0</td>
+                <td>26</td>
+            </tr>
+    
+        </tbody>
+  </table>
+  <button onclick="salir()">Salir</button>
+
+  <script>
     const usuario = localStorage.getItem("usuario");
     if (!usuario) {
       alert("Debes iniciar sesión primero.");

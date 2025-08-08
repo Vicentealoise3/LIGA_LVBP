@@ -1,95 +1,41 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<meta charset="utf-8"/>
-<title>Historial de Juegos Reportados</title>
-<style>
-    body {
-        background: #ffffff;
-        color: #1a1a1a;
-        font-family: 'Segoe UI', sans-serif;
-        font-size: 16px;
-        padding: 20px;
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <title>Historial de Juegos Reportados</title>
+  <style>
+    html, body { max-width: 100%; margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; font-size: 16px; }
+    input, select, button, label { width: 100%; max-width: 100%; box-sizing: border-box; font-size: 1rem; }
+    .responsive-table { width: 100%; overflow-x: auto; display: block; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; text-align: left; font-size: 1rem; }
+    @media (max-width: 600px) {
+        body { font-size: 18px; padding: 10px; }
     }
-    .container {
-        max-width: 600px;
-        margin: auto;
-        background: #f4f4f4;
-        padding: 25px;
-        border-radius: 12px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; max-width: 800px; margin: auto; }
+    h1 { text-align: center; }
+    .reporte { border: 1px solid #ccc; padding: 10px; margin: 10px 0; background: white; border-radius: 6px; position: relative; }
+    .reporte.destacado { border: 2px solid #007bff; background: #e7f1ff; }
+    .borrar-btn {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 5px 8px;
+      cursor: pointer;
     }
-    h1, h2, h3 {
-        color: #0c3c78;
-        text-align: center;
-        font-size: 1.8rem;
-    }
-    label {
-        font-weight: bold;
-        margin-top: 10px;
-        display: block;
-        color: #1a1a1a;
-    }
-    input, select {
-        padding: 12px;
-        font-size: 1.05rem;
-        width: 100%;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        background-color: #fff;
-        color: #1a1a1a;
-    }
-    button {
-        padding: 14px;
-        font-size: 1.1rem;
-        width: 100%;
-        margin: 8px 0;
-        background-color: #007BFF;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
-    button:hover {
-        background-color: #0056b3;
-    }
-    .juego {
-        background: #eaf3fb;
-        padding: 12px;
-        margin-bottom: 16px;
-        border-radius: 8px;
-        color: #1a1a1a;
-        font-weight: 500;
-    }
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-        font-size: 1rem;
-    }
-    th, td {
-        padding: 12px;
-        border: 1px solid #ccc;
-        text-align: left;
-        color: #1a1a1a;
-    }
-    tr:nth-child(even) {
-        background-color: #f0f8ff;
-    }
-    tr:nth-child(odd) {
-        background-color: #e1effa;
-    }
-</style></head>
-<body class="container">
-<h1>Historial de Juegos Reportados</h1>
-<div id="listaReportes"></div>
-<button onclick="salir()">Salir</button>
-<script>
+  </style>
+</head>
+<body>
+  <h1>Historial de Juegos Reportados</h1>
+  <div id="listaReportes"></div>
+  <button onclick="salir()">Salir</button>
+
+  <script>
     const usuario = localStorage.getItem("usuario");
     if (!usuario) {
       alert("Debes iniciar sesión primero.");
