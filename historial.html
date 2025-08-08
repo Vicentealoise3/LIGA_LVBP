@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta charset="utf-8"/>
+<title>Historial de Juegos Reportados</title>
+<style>
+    body {
+        background: #ffffff;
+        color: #1a1a1a;
+        font-family: 'Segoe UI', sans-serif;
+        font-size: 16px;
+        padding: 20px;
+    }
+    .container {
+        max-width: 600px;
+        margin: auto;
+        background: #f4f4f4;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+    h1, h2, h3 {
+        color: #0c3c78;
+        text-align: center;
+        font-size: 1.8rem;
+    }
+    label {
+        font-weight: bold;
+        margin-top: 10px;
+        display: block;
+        color: #1a1a1a;
+    }
+    input, select {
+        padding: 12px;
+        font-size: 1.05rem;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background-color: #fff;
+        color: #1a1a1a;
+    }
+    button {
+        padding: 14px;
+        font-size: 1.1rem;
+        width: 100%;
+        margin: 8px 0;
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+    .juego {
+        background: #eaf3fb;
+        padding: 12px;
+        margin-bottom: 16px;
+        border-radius: 8px;
+        color: #1a1a1a;
+        font-weight: 500;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        font-size: 1rem;
+    }
+    th, td {
+        padding: 12px;
+        border: 1px solid #ccc;
+        text-align: left;
+        color: #1a1a1a;
+    }
+    tr:nth-child(even) {
+        background-color: #f0f8ff;
+    }
+    tr:nth-child(odd) {
+        background-color: #e1effa;
+    }
+</style></head>
+<body class="container">
+<h1>Historial de Juegos Reportados</h1>
+<div id="listaReportes"></div>
+<button onclick="salir()">Salir</button>
+<script>
+    const usuario = localStorage.getItem("usuario");
+    if (!usuario) {
+      alert("Debes iniciar sesión primero.");
+      window.location.href = "index.html";
+    }
+
+    const admin = (usuario === "vicentealoise" || usuario === "machado_seba-03");
+
+    const contenedorUsuario = document.createElement("div");
+    contenedorUsuario.textContent = "🔒 Usuario: " + usuario;
+    contenedorUsuario.style.position = "fixed";
+    contenedorUsuario.style.top = "10px";
+    contenedorUsuario.style.right = "10px";
+    contenedorUsuario.style.backgroundColor = "#007bff";
+    contenedorUsuario.style.color = "white";
+    contenedorUsuario.style.padding = "8px 14px";
+    contenedorUsuario.style.borderRadius = "6px";
+    contenedorUsuario.style.fontWeight = "bold";
+    document.body.appendChild(contenedorUsuario);
+
+    function renderReportes() {
+      const contenedor = document.getElementById("listaReportes");
+      contenedor.innerHTML = "";
+      const reportes = JSON.parse(localStorage.getItem("historial") || "[]");
+
+      reportes.forEach((r, i) => {
+        const div = document.createElement("div");
+        div.className = "reporte" + (i === reportes.length - 1 ? " destacado" : "");
+        div.innerHTML = `
+          <b>Juego ${i + 1}</b><br>
+          Fecha: ${r.fecha}<br>
+          Ganador: ${r.ganador}<br>
+          Derrotado: ${r.perdedor}<br>
+          Resultado: ${r.resultado}`;
+        if (admin) {
+          const btn = document.createElement("button");
+          btn.textContent = "🗑️ Borrar";
+          btn.className = "borrar-btn";
+          btn.onclick = () => borrarReporte(i);
+          div.appendChild(btn);
+        }
+        contenedor.appendChild(div);
+      });
+    }
+
+    function borrarReporte(indice) {
+      const confirmacion = confirm("¿Estás seguro de que quieres borrar este reporte?");
+      if (!confirmacion) return;
+      let reportes = JSON.parse(localStorage.getItem("historial") || "[]");
+      reportes.splice(indice, 1);
+      localStorage.setItem("historial", JSON.stringify(reportes));
+      renderReportes();
+    }
+
+    function salir() {
+      localStorage.removeItem("usuario");
+      alert("Gracias por reportar tu victoria, te esperamos para el próximo reporte de tu siguiente victoria (¡Suerte!).");
+      window.location.href = "index.html";
+    }
+
+    renderReportes();
+  </script>
+</body>
+</html>
