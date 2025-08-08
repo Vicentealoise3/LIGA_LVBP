@@ -1,9 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
   <title>Reportar Juego</title>
   <style>
+    html, body { max-width: 100%; margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; font-size: 16px; }
+    input, select, button, label { width: 100%; max-width: 100%; box-sizing: border-box; font-size: 1rem; }
+    .responsive-table { width: 100%; overflow-x: auto; display: block; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { padding: 8px; text-align: left; font-size: 1rem; }
+    @media (max-width: 600px) {
+        body { font-size: 18px; padding: 10px; }
+    }
     body { font-family: Arial; max-width: 600px; margin: auto; padding: 20px; background-color: #f4f4f4; }
     h1, h2 { text-align: center; }
     label, select, input { display: block; width: 100%; margin: 10px 0; padding: 8px; font-size: 16px; }
@@ -83,11 +92,6 @@
       const ganador = document.getElementById("equipoGanador").value;
       const perdedor = document.getElementById("equipoDerrotado").value;
       const resultado = document.getElementById("resultado").value;
-
-      if (ganador === perdedor) {
-        alert("No puedes seleccionar como derrotado al mismo equipo que ganó.");
-        return;
-      }
 
       if (!validarFormatoResultado(resultado)) {
         alert("Formato de resultado inválido. Usa el formato correcto como 5-3.");
