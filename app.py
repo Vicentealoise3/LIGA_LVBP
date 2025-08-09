@@ -53,6 +53,7 @@ def leer():
         return {"status": "error", "message": str(e)}, 500
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     app.run(host='0.0.0.0', port=10000)
 
 
@@ -66,3 +67,6 @@ def add_no_cache_headers(response):
     except Exception:
         pass
     return response
+=======
+    app.run(host='0.0.0.0', port=10000)
+>>>>>>> 517eaa31d69548c96e93f80a948dd9f49f67e8aa
