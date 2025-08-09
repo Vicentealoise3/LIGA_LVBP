@@ -90,7 +90,7 @@
       return /^\d{1,2}-\d{1,2}$/.test(texto);
     }
 
-    function guardarReporte() {
+    async function guardarReporte() {
       const ganador = document.getElementById("equipoGanador").value;
       const perdedor = document.getElementById("equipoDerrotado").value;
       const resultado = document.getElementById("resultado").value;
@@ -114,9 +114,9 @@
       }
 
       historial.push({ ganador, perdedor, resultado });
-      localStorage.setItem("historial", JSON.stringify(historial));
-
-      window.location.href = "historial.html";
+      localStorage.setItem('historial', JSON.stringify(historial));
+      await guardarServidorHistorial(historial);
+window.location.href = "historial.html";
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -141,5 +141,44 @@
       document.body.appendChild(contenedorUsuario);
     });
   </script>
+
+<script>
+async function leerServidorHistorial() {
+  try {
+    const r = await fetch('/leer?archivo=historial.json', { cache: 'no-store' });
+    const data = await r.json();
+    if (data && data.status === 'ok' && typeof data.contenido === 'string') {
+      const arr = JSON.parse(data.contenido || "[]");
+      if (Array.isArray(arr)) {
+        localStorage.setItem('historial', JSON.stringify(arr));
+      await guardarServidorHistorial(arr);
+return arr;
+      }
+    }
+  } catch(e) {}
+  try { return JSON.parse(localStorage.getItem('historial') || "[]"); }
+  catch(e){ return []; }
+}
+async function guardarServidorHistorial(arreglo) {
+  const payload = { archivo: 'historial.json', contenido: JSON.stringify(arreglo) };
+  try {
+    await fetch('/guardar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      cache: 'no-store',
+      keepalive: true
+    });
+    return true;
+  } catch (e) {
+    try {
+      const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+      if (navigator.sendBeacon) navigator.sendBeacon('/guardar', blob);
+    } catch (_) {}
+    return false;
+  }
+}
+</script>
+
 </body>
 </html>
