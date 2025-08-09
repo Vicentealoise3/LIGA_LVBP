@@ -1,7 +1,6 @@
 
 from flask import Flask, send_from_directory, request
 import os
-import json
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 
@@ -15,24 +14,11 @@ def serve_static(filename):
 
 @app.route('/guardar', methods=['POST'])
 def guardar():
-    data = request.get_json(silent=True)
-    if data is None:
-        try:
-            raw = request.get_data(as_text=True) or ""
-            data = json.loads(raw) if raw else {}
-        except Exception:
-            data = {}
-    nombre_archivo = (data or {}).get("archivo")
-    contenido = (data or {}).get("contenido")
+    data = request.json
+    nombre_archivo = data.get("archivo")
+    contenido = data.get("contenido")
     if not nombre_archivo or contenido is None:
         return {"status": "error", "message": "Faltan datos"}, 400
-    try:
-        with open(nombre_archivo, "w", encoding="utf-8") as f:
-            f.write(contenido)
-        return {"status": "ok"}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}, 500
-, 400
     try:
         with open(nombre_archivo, "w", encoding="utf-8") as f:
             f.write(contenido)
@@ -53,20 +39,4 @@ def leer():
         return {"status": "error", "message": str(e)}, 500
 
 if __name__ == '__main__':
-<<<<<<< HEAD
     app.run(host='0.0.0.0', port=10000)
-
-
-@app.after_request
-def add_no_cache_headers(response):
-    try:
-        if request.path in ['/leer', '/guardar']:
-            response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-            response.headers['Pragma'] = 'no-cache'
-            response.headers['Expires'] = '0'
-    except Exception:
-        pass
-    return response
-=======
-    app.run(host='0.0.0.0', port=10000)
->>>>>>> 517eaa31d69548c96e93f80a948dd9f49f67e8aa
