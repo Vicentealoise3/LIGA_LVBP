@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Serie del Caribe — Recta Final (Semana 12)</title>
+<style>
+  :root{--bg:#eef7e8;--head:#f6ec4f;--th:#a7c4f5;--alt:#eaf2ff;--ok:#e8ffe8;}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg)}
+  header{background:var(--head);padding:14px 18px;border-bottom:3px solid #d7cf45}
+  h1{margin:0;font-size:1.2rem}
+  .wrap{max-width:960px;margin:18px auto;padding:0 14px}
+  table{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border:1px solid #cfe0ff;border-radius:12px;overflow:hidden}
+  thead th{background:var(--th);color:#0b215a;text-transform:uppercase;font-size:.85rem;padding:10px}
+  tbody th{background:#f4f8ff;color:#0b215a;text-align:left;padding:10px}
+  td,th{padding:10px;text-align:center}
+  tbody tr:nth-child(even){background:var(--alt)}
+  .clickable{background:var(--ok);cursor:pointer;position:relative;border-radius:8px}
+  .clickable::after{
+    content:"🎞️"; position:absolute; right:6px; top:6px; font-size:.95rem; opacity:.85;
+  }
+  .clickable:hover{filter:brightness(0.97)}
+  td.empty{color:#9aa3b2;font-style:italic}
+  .modal{position:fixed;inset:0;background:rgba(5,12,32,.65);display:none;align-items:center;justify-content:center;padding:22px;z-index:50}
+  .modal.open{display:flex}
+  .dialog{background:#0b1220;color:#e5edff;border-radius:12px;width:min(980px,96vw);max-height:90vh;overflow:hidden;display:flex;flex-direction:column}
+  .dialog header{display:flex;gap:10px;align-items:center;padding:10px 12px}
+  .dialog header h2{margin:0;font-size:1rem}
+  .dialog button{margin-left:auto;background:#1f2937;border:1px solid #334155;color:#e5edf9;padding:6px 10px;border-radius:8px;cursor:pointer}
+  .imgbox{padding:12px;background:#0e162b;display:flex;justify-content:center;overflow:auto}
+  .imgbox img{max-width:100%;height:auto;border-radius:10px}
+  .dialog footer{padding:8px 12px;color:#9fb0d0;font-size:.9rem}
+</style>
+</head>
+<body>
+<header><h1>Serie del Caribe · Recta Final — Semana 12 (08–17 ago 2025)</h1></header>
+
+<div class="wrap">
+  <table>
+    <thead><tr><th>Serie</th><th>Juego 1</th><th>Juego 2</th><th>Juego 3</th></tr></thead>
+    <tbody>
+      <tr>
+        <th>COL vs CLE</th>
+        <td>5-0</td><td>8-7</td><td>7-2</td>
+      </tr>
+      <tr>
+        <th>LAD vs DET</th>
+        <td>4-2</td><td>0-1</td><td class="empty">—</td>
+      </tr>
+      <tr><th>BOS vs WSH</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr><th>PIT vs NYY</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr><th>NYM vs ATL</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr>
+        <th>CHC vs PHI</th>
+        <td data-key="CHC vs PHI|1">1-0</td>
+        <td data-key="CHC vs PHI|2">0-2</td>
+        <td class="empty">—</td>
+      </tr>
+      <tr><th>ARI vs ATH</th><td>9-10</td><td>0-2</td><td class="empty">—</td></tr>
+      <tr><th>WSH vs COL</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr><th>ATH vs CHC</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr><th>PHI vs NYM</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr><th>NYY vs LAD</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr><th>DET vs BOS</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr><th>CLE vs ARI</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+      <tr><th>ATL vs PIT</th><td class="empty">—</td><td class="empty">—</td><td class="empty">—</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal" id="modal" aria-hidden="true">
+  <div class="dialog" role="dialog" aria-label="Boxscore">
+    <header><h2 id="cap">Boxscore</h2><button id="close">Cerrar ✕</button></header>
+    <div class="imgbox"><img id="img" alt="Boxscore" /></div>
+    <footer>Usa URLs “raw” de GitHub o tu servidor. Si no carga, revisa el enlace.</footer>
+  </div>
+</div>
+
+<script>
+  const BOX = {
+    "CHC vs PHI|1": "https://liga-lvbp.onrender.com/SDC1/juego1-CHC-PHI.jpeg",
+    "CHC vs PHI|2": "https://liga-lvbp.onrender.com/SDC1/juego2-CHC-PHI.jpeg"
+  };
+
+  document.querySelectorAll('[data-key]').forEach(td => {
+    const key = td.getAttribute('data-key');
+    if (BOX[key]) {
+      td.classList.add('clickable');
+      td.addEventListener('click', () => openModal(BOX[key], key.replace('|', ' — Juego ')));
+      td.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' ') { e.preventDefault(); td.click(); } });
+      td.tabIndex = 0;
+      td.title = 'Ver boxscore';
+    }
+  });
+
+  const modal = document.getElementById('modal'),
+        img = document.getElementById('img'),
+        cap = document.getElementById('cap'),
+        close = document.getElementById('close');
+
+  function openModal(src, caption) {
+    cap.textContent = caption;
+    img.removeAttribute('src');
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden','false');
+    requestAnimationFrame(() => img.src = src);
+  }
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden','true');
+    img.removeAttribute('src');
+  }
+
+  close.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if (e.target===modal) closeModal(); });
+  window.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+  img.addEventListener('error', () => img.alt='No se pudo cargar la imagen. Revisa el enlace.');
+</script>
+</body>
+</html>
